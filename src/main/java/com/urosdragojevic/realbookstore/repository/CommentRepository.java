@@ -23,17 +23,20 @@ public class CommentRepository {
     }
 
     public void create(Comment comment) {
+//        String query = "insert into comments(bookId, userId, comment) values (" + comment.getBookId() + ", " + comment.getUserId() + ", '" + comment.getComment() + "')";
         String query = "insert into comments(bookId, userId, comment) values (?, ?, ?)";
 
         try (Connection connection = dataSource.getConnection();
+             //Statement statement = connection.createStatement();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
             statement.setInt(1, comment.getBookId());
             statement.setInt(2, comment.getUserId());
             statement.setString(3, comment.getComment());
-
+            //statement.execute(query);
             statement.execute();
             //comment'); insert into persons(firstName, lastName, email) values ('jason', 'statham', 'hud@mail.com')--
+            //comment1'); insert into persons(firstName, lastName, email) values ('jasonXSS11', 'stathamXSS11', '<img src="x" onerror="console.log(document.cookie)"/>')--
         } catch (SQLException e) {
             e.printStackTrace();
         }
